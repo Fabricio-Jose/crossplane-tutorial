@@ -1,17 +1,17 @@
 #!/bin/sh
 set -e
 
-gum style \
-	--foreground 212 --border-foreground 212 --border double \
-	--margin "1 2" --padding "2 4" \
-	'Setup for the Managed Resources chapter.
+/home/linuxbrew/.linuxbrew/bin/gum style \
+    --foreground 212 --border-foreground 212 --border double \
+    --margin "1 2" --padding "2 4" \
+    'Setup for the Managed Resources chapter.
   
 This script assumes that you jumped straight into this chapter.
 If that is not the case (if you are continuing from the previous
 chapter), please answer with "No" when asked whether you are
 ready to start.'
 
-gum confirm '
+/home/linuxbrew/.linuxbrew/bin/gum confirm '
 Are you ready to start?
 Select "Yes" only if you did NOT follow the story from the start (if you jumped straight into this chapter).
 Feel free to say "No" and inspect the script if you prefer setting up resources manually.
@@ -34,9 +34,9 @@ echo "
 |az CLI          |If using Azure       |'https://learn.microsoft.com/cli/azure/install-azure-cli'|
 
 If you are running this script from **Nix shell**, most of the requirements are already set with the exception of **Docker** and the **hyperscaler account**.
-" | gum format
+" | /home/linuxbrew/.linuxbrew/bin/gum format
 
-gum confirm "
+/home/linuxbrew/.linuxbrew/bin/gum confirm "
 Do you have those tools installed?
 " || exit 0
 
@@ -60,9 +60,9 @@ kind create cluster
 # Crossplane #
 ##############
 
-echo "## Which Hyperscaler do you want to use?" | gum format
+echo "## Which Hyperscaler do you want to use?" | /home/linuxbrew/.linuxbrew/bin/gum format
 
-HYPERSCALER=$(gum choose "google" "aws" "azure")
+HYPERSCALER=$(/home/linuxbrew/.linuxbrew/bin/gum choose "google" "aws" "azure")
 
 echo "export HYPERSCALER=$HYPERSCALER" >> .env
 
@@ -77,14 +77,14 @@ if [ "$HYPERSCALER" = "google" ]; then
     gcloud projects create ${PROJECT_ID}
 
     echo "## Open https://console.cloud.google.com/billing/linkedaccount?project=$PROJECT_ID and link a billing account" \
-        | gum format
+        | /home/linuxbrew/.linuxbrew/bin/gum format
 
-    gum input --placeholder "Press the enter key to continue."
+    /home/linuxbrew/.linuxbrew/bin/gum input --placeholder "Press the enter key to continue."
 
     echo "## Open https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=$PROJECT_ID and *ENABLE* the API" \
-        | gum format
+        | /home/linuxbrew/.linuxbrew/bin/gum format
 
-    gum input --placeholder "Press the enter key to continue."
+    /home/linuxbrew/.linuxbrew/bin/gum input --placeholder "Press the enter key to continue."
 
     export SA_NAME=devops-toolkit
 
@@ -106,17 +106,17 @@ if [ "$HYPERSCALER" = "google" ]; then
 
 elif [ "$HYPERSCALER" = "aws" ]; then
 
-    AWS_ACCESS_KEY_ID=$(gum input \
+    AWS_ACCESS_KEY_ID=$(/home/linuxbrew/.linuxbrew/bin/gum input \
         --placeholder "AWS Access Key ID" \
         --value "$AWS_ACCESS_KEY_ID")
     echo "export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
     
-    AWS_SECRET_ACCESS_KEY=$(gum input \
+    AWS_SECRET_ACCESS_KEY=$(/home/linuxbrew/.linuxbrew/bin/gum input \
         --placeholder "AWS Secret Access Key" \
         --value "$AWS_SECRET_ACCESS_KEY" --password)
     echo "export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
 
-    AWS_ACCOUNT_ID=$(gum input --placeholder "AWS Account ID" \
+    AWS_ACCOUNT_ID=$(/home/linuxbrew/.linuxbrew/bin/gum input --placeholder "AWS Account ID" \
         --value "$AWS_ACCOUNT_ID")
     echo "export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> .env
 
@@ -127,7 +127,7 @@ aws_secret_access_key = $AWS_SECRET_ACCESS_KEY
 
 else
 
-    AZURE_TENANT_ID=$(gum input --placeholder "Azure Tenant ID" --value "$AZURE_TENANT_ID")
+    AZURE_TENANT_ID=$(/home/linuxbrew/.linuxbrew/bin/gum input --placeholder "Azure Tenant ID" --value "$AZURE_TENANT_ID")
 
     az login --tenant $AZURE_TENANT_ID
 
@@ -138,3 +138,4 @@ else
         | tee azure-creds.json
 
 fi
+
